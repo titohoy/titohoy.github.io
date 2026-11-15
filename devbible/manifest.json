@@ -1,8 +1,8 @@
 {
  "about": "Encrypted copy of the Eclipsed Realms Development Bible. AES-GCM-256, key from PBKDF2-SHA256.",
- "built": "2026-11-14T22:02:59.887Z",
- "salt": "+wy3khv0Huvkzv/PXryJ+A==",
+ "built": "2026-11-15T00:21:04.980Z",
+ "salt": "/GvcZLXxAd1s5GGmKmn01g==",
  "iterations": 310000,
- "check": "uc496lanfRInyFFgdeHefYHikqXudfzLpoua2So5P3g8AiEsJNxWIikfbH71qS55ZNHeDw==",
- "files": 1081
+ "check": "HXfAygY6EdE1A0bKbkZR05t3TjZWM6QfQ1lCpfsJHxJjk/YianWc+HA7WoplpzsSOmQR7Q==",
+ "files": 1113
 }
