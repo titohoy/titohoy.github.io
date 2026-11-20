@@ -4,10 +4,9 @@ const ROOT = new URL('./', self.location).pathname, APP = ROOT + 'app/';
 const MIME = { html: 'text/html; charset=utf-8', js: 'text/javascript; charset=utf-8', mjs: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8', json: 'application/json; charset=utf-8',
   txt: 'text/plain; charset=utf-8', md: 'text/plain; charset=utf-8', svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', gif: 'image/gif', avif: 'image/avif',
   mp4: 'video/mp4', webm: 'video/webm', mp3: 'audio/mpeg', ogg: 'audio/ogg', wav: 'audio/wav', woff2: 'font/woff2', woff: 'font/woff', ttf: 'font/ttf', ico: 'image/x-icon' };
-let key = null;
-const getKey = () => key ? Promise.resolve(key) : new Promise((res) => { const o = indexedDB.open('devbible', 1); o.onupgradeneeded = () => o.result.createObjectStore('k');
-  o.onsuccess = () => { const r = o.result.transaction('k').objectStore('k').get('key'); r.onsuccess = () => res(key = r.result || null); r.onerror = () => res(null); }; o.onerror = () => res(null); });
-const forget = () => new Promise((res) => { key = null; const o = indexedDB.open('devbible', 1); o.onsuccess = () => { const tx = o.result.transaction('k', 'readwrite'); tx.objectStore('k').delete('key'); tx.oncomplete = res; tx.onerror = res; }; o.onerror = res; });
+const getKey = () => new Promise((res) => { const o = indexedDB.open('devbible', 1); o.onupgradeneeded = () => o.result.createObjectStore('k');
+  o.onsuccess = () => { const r = o.result.transaction('k').objectStore('k').get('key'); r.onsuccess = () => res(r.result || null); r.onerror = () => res(null); }; o.onerror = () => res(null); });
+const forget = () => new Promise((res) => { const o = indexedDB.open('devbible', 1); o.onsuccess = () => { const tx = o.result.transaction('k', 'readwrite'); tx.objectStore('k').delete('key'); tx.oncomplete = res; tx.onerror = res; }; o.onerror = res; });
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
@@ -15,7 +14,7 @@ self.addEventListener('fetch', (e) => { const u = new URL(e.request.url); if (u.
 
 async function serve(u, req) {
   let rel = u.pathname.slice(APP.length); if (rel === '' || rel.endsWith('/')) rel += 'index.html';
-  const back = () => (req.mode === 'navigate' ? Response.redirect(ROOT + '?locked=1', 302) : new Response('Locked', { status: 401 }));
+  const back = () => (req.mode === 'navigate' ? Response.redirect(new URL(ROOT + '?locked=1&next=' + encodeURIComponent(u.pathname + u.search), location.origin), 302) : new Response('Locked', { status: 401 }));
   // the Bible's live features need the owner's local Bible server; the published copy is read-only
   if (rel.startsWith('api/')) return new Response(JSON.stringify({ ok: false, offline: true, error: 'This is the read-only online copy of the Bible. Reports and live dialogue editing work only from the Bible server on the development PC.' }),
     { status: 503, headers: { 'Content-Type': 'application/json; charset=utf-8' } });

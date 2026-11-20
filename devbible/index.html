@@ -26,8 +26,9 @@
 <main>
   <p class="eyebrow">Eclipsed Realms</p>
   <h1>Development Bible</h1>
-  <p>Enter the password to open the development Bible.</p>
-  <form id="f" autocomplete="off">
+  <p id="access-intro">The Development Bible is available from the development workspace.</p>
+  <p id="live-access" hidden></p>
+  <form id="f" autocomplete="off" hidden>
     <label for="pw" class="eyebrow" style="display:block">Password</label>
     <input id="pw" type="password" autocomplete="current-password" required autofocus>
     <button id="go" type="submit">Open</button>
